@@ -1,6 +1,5 @@
 import pygame
 import math
-import random
 
 class Drone:
 
@@ -15,12 +14,17 @@ class Drone:
 
     def move(self):
 
-        self.x += math.cos(math.radians(self.angle)) * self.speed
-        self.y -= math.sin(math.radians(self.angle)) * self.speed
+        self.x += math.cos(
+            math.radians(self.angle)
+        ) * self.speed
 
-    def rotate_random(self):
+        self.y -= math.sin(
+            math.radians(self.angle)
+        ) * self.speed
 
-        self.angle += random.randint(90, 180)
+    def rotate(self, amount):
+
+        self.angle += amount
 
     def get_rect(self):
 
