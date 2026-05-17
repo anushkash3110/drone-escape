@@ -1,5 +1,6 @@
 import pygame
 import math
+import random
 
 # Initialize pygame
 pygame.init()
@@ -49,26 +50,32 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-    # Keyboard input
-    keys = pygame.key.get_pressed()
 
-    # Rotate left
-    if keys[pygame.K_LEFT]:
-        angle += rotation_speed
 
-    # Rotate right
-    if keys[pygame.K_RIGHT]:
-        angle -= rotation_speed
+      # Automatic forward movement
+    x += math.cos(math.radians(angle)) * speed
+    y -= math.sin(math.radians(angle)) * speed      
 
-    # Move forward
-    if keys[pygame.K_UP]:
-        x += math.cos(math.radians(angle)) * speed
-        y -= math.sin(math.radians(angle)) * speed
+    # # Keyboard input
+    # keys = pygame.key.get_pressed()
 
-    # Move backward
-    if keys[pygame.K_DOWN]:
-        x -= math.cos(math.radians(angle)) * speed
-        y += math.sin(math.radians(angle)) * speed
+    # # Rotate left
+    # if keys[pygame.K_LEFT]:
+    #     angle += rotation_speed
+
+    # # Rotate right
+    # if keys[pygame.K_RIGHT]:
+    #     angle -= rotation_speed
+
+    # # Move forward
+    # if keys[pygame.K_UP]:
+    #     x += math.cos(math.radians(angle)) * speed
+    #     y -= math.sin(math.radians(angle)) * speed
+
+    # # Move backward
+    # if keys[pygame.K_DOWN]:
+    #     x -= math.cos(math.radians(angle)) * speed
+    #     y += math.sin(math.radians(angle)) * speed
 
     # Fill background
     screen.fill(WHITE)
@@ -153,8 +160,12 @@ while running:
 
         if drone_rect.colliderect(wall):
 
-            x = old_x
-            y = old_y
+          # Return to previous position
+          x = old_x
+          y = old_y
+
+          # Rotate random direction
+          angle += random.randint(90, 180)
 
     # Draw drone
     pygame.draw.circle(
