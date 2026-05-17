@@ -33,19 +33,23 @@ rotation_speed = 3
 wall_thickness = 20
 exit_gap = 140
 
-# Main loop control
+# Main loop
 running = True
 
 while running:
 
     clock.tick(60)
 
-    # Exit button
+    # Save old position
+    old_x = x
+    old_y = y
+
+    # Exit window
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
 
-    # Keyboard controls
+    # Keyboard input
     keys = pygame.key.get_pressed()
 
     # Rotate left
@@ -69,47 +73,96 @@ while running:
     # Fill background
     screen.fill(WHITE)
 
-    # TOP WALL with exit gap
-    pygame.draw.rect(
-        screen,
-        BLACK,
-        (0, 0, WIDTH - exit_gap, wall_thickness)
+    # WALLS
+
+    # Top wall with exit gap
+    top_wall = pygame.Rect(
+        0,
+        0,
+        WIDTH - exit_gap,
+        wall_thickness
     )
 
-    # LEFT WALL
-    pygame.draw.rect(
-        screen,
-        BLACK,
-        (0, 0, wall_thickness, HEIGHT)
+    # Left wall
+    left_wall = pygame.Rect(
+        0,
+        0,
+        wall_thickness,
+        HEIGHT
     )
 
-    # RIGHT WALL
-    pygame.draw.rect(
-        screen,
-        BLACK,
-        (WIDTH - wall_thickness, wall_thickness, wall_thickness, HEIGHT)
+    # Right wall
+    right_wall = pygame.Rect(
+        WIDTH - wall_thickness,
+        wall_thickness,
+        wall_thickness,
+        HEIGHT
     )
 
-    # BOTTOM WALL
-    pygame.draw.rect(
-        screen,
-        BLACK,
-        (0, HEIGHT - wall_thickness, WIDTH, wall_thickness)
+    # Bottom wall
+    bottom_wall = pygame.Rect(
+        0,
+        HEIGHT - wall_thickness,
+        WIDTH,
+        wall_thickness
     )
 
-    # EXIT AREA
+    # Cabin obstacle
+    cabin = pygame.Rect(
+        400,
+        250,
+        200,
+        120
+    )
+
+    # Draw walls
+    pygame.draw.rect(screen, BLACK, top_wall)
+    pygame.draw.rect(screen, BLACK, left_wall)
+    pygame.draw.rect(screen, BLACK, right_wall)
+    pygame.draw.rect(screen, BLACK, bottom_wall)
+
+    # Draw exit
     pygame.draw.rect(
         screen,
         GREEN,
         (WIDTH - exit_gap, 0, exit_gap, wall_thickness)
     )
 
-    # Cabin obstacle
-    cabin = pygame.Rect(400, 250, 200, 120)
+    # Draw cabin
     pygame.draw.rect(screen, GRAY, cabin)
 
-    # Drone body
-    pygame.draw.circle(screen, BLUE, (int(x), int(y)), 15)
+    # Drone collision rectangle
+    drone_rect = pygame.Rect(
+        x - 15,
+        y - 15,
+        30,
+        30
+    )
+
+    # Collision objects
+    walls = [
+        top_wall,
+        left_wall,
+        right_wall,
+        bottom_wall,
+        cabin
+    ]
+
+    # Collision detection
+    for wall in walls:
+
+        if drone_rect.colliderect(wall):
+
+            x = old_x
+            y = old_y
+
+    # Draw drone
+    pygame.draw.circle(
+        screen,
+        BLUE,
+        (int(x), int(y)),
+        15
+    )
 
     # Direction line
     end_x = x + math.cos(math.radians(angle)) * 30
