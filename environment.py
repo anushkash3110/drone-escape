@@ -4,7 +4,7 @@ from settings import *
 
 def create_environment():
 
-    # Walls
+    # Top wall
 
     top_wall = pygame.Rect(
         0,
@@ -13,12 +13,16 @@ def create_environment():
         WALL_THICKNESS
     )
 
+    # Left wall
+
     left_wall = pygame.Rect(
         0,
         0,
         WALL_THICKNESS,
         HEIGHT
     )
+
+    # Right wall
 
     right_wall = pygame.Rect(
         WIDTH - WALL_THICKNESS,
@@ -27,6 +31,8 @@ def create_environment():
         HEIGHT
     )
 
+    # Bottom wall
+
     bottom_wall = pygame.Rect(
         0,
         HEIGHT - WALL_THICKNESS,
@@ -34,13 +40,13 @@ def create_environment():
         WALL_THICKNESS
     )
 
-    # Cabin obstacle
+    # Center cabin obstacle
 
     cabin = pygame.Rect(
-        400,
+        380,
         250,
-        200,
-        120
+        220,
+        140
     )
 
     # Collision objects
@@ -53,27 +59,26 @@ def create_environment():
         cabin
     ]
 
-    # Line guidance path
+    # Navigation path
 
     path_points = [
 
-        (180, 550),
-        (250, 550),
+        (150, 560),
+        (220, 560),
+        (300, 560),
 
-        (320, 520),
-        (380, 470),
+        (360, 520),
+        (360, 450),
 
-        (430, 420),
+        (360, 400),
+        (360, 330),
 
-        (500, 420),
-        (600, 380),
+        (650, 330),
 
-        (700, 300),
+        (760, 260),
+        (850, 180),
 
-        (780, 220),
-        (850, 140),
-
-        (920, 60)
+        (920, 80)
     ]
 
     return walls, cabin, path_points

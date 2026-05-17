@@ -6,11 +6,7 @@ from drone import Drone
 from environment import create_environment
 from vision import follow_line
 
-# Initialize pygame
-
 pygame.init()
-
-# Create window
 
 screen = pygame.display.set_mode(
     (WIDTH, HEIGHT)
@@ -22,15 +18,13 @@ pygame.display.set_caption(
 
 clock = pygame.time.Clock()
 
-# Create drone
+# Drone
 
 drone = Drone()
 
-# Create environment
+# Environment
 
 walls, cabin, path_points = create_environment()
-
-# Main loop
 
 running = True
 
@@ -38,14 +32,12 @@ while running:
 
     clock.tick(60)
 
-    # Window close event
-
     for event in pygame.event.get():
 
         if event.type == pygame.QUIT:
             running = False
 
-    # Follow line
+    # Autonomous navigation
 
     follow_line(
         drone,
@@ -55,6 +47,7 @@ while running:
     # Background
 
     screen.fill(WHITE)
+
 
     # Draw walls
 
@@ -66,7 +59,7 @@ while running:
             wall
         )
 
-    # Draw exit gap
+    # Draw exit
 
     pygame.draw.rect(
         screen,
@@ -79,16 +72,15 @@ while running:
         )
     )
 
-    # Draw line guidance points
+    # Draw continuous navigation line
 
-    for point in path_points:
-
-        pygame.draw.circle(
-            screen,
-            GREEN,
-            point,
-            8
-        )
+    pygame.draw.lines(
+        screen,
+        BLACK,
+        False,
+        path_points,
+        8
+    )
 
     # Draw drone
 
@@ -102,7 +94,7 @@ while running:
         15
     )
 
-    # Drone direction line
+    # Drone direction indicator
 
     end_x = drone.x + math.cos(
         math.radians(drone.angle)
@@ -120,10 +112,6 @@ while running:
         3
     )
 
-    # Update display
-
     pygame.display.update()
-
-# Quit pygame
 
 pygame.quit()
