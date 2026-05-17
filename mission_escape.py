@@ -1,3 +1,5 @@
+from drone_control import *
+
 connect_drone()
 
 takeoff()
