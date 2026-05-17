@@ -6,7 +6,7 @@ def follow_line(drone, path_points):
 
     min_distance = float("inf")
 
-    # Find nearest point
+    # Find closest path point
 
     for point in path_points:
 
@@ -25,7 +25,7 @@ def follow_line(drone, path_points):
 
             target_point = point
 
-    # Move toward nearest point
+    # Move toward point
 
     if target_point:
 
@@ -34,7 +34,7 @@ def follow_line(drone, path_points):
         dx = target_x - drone.x
         dy = target_y - drone.y
 
-        # Calculate angle
+        # Calculate target angle
 
         target_angle = math.degrees(
 
@@ -54,7 +54,7 @@ def follow_line(drone, path_points):
         if angle_difference < -180:
             angle_difference += 360
 
-        # Smooth turning
+        # Smooth rotation
 
         drone.angle += angle_difference * 0.08
 
