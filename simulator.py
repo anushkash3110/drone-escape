@@ -13,7 +13,7 @@ screen = pygame.display.set_mode(
 )
 
 pygame.display.set_caption(
-    "Drone Escape Simulator"
+    "Autonomous Drone Escape Simulator"
 )
 
 clock = pygame.time.Clock()
@@ -24,7 +24,11 @@ drone = Drone()
 
 # Environment
 
-walls, cabin, path_points = create_environment()
+walls, cabin, fake_paths, exit_path = create_environment()
+
+# Timer
+
+start_time = pygame.time.get_ticks()
 
 running = True
 
@@ -37,17 +41,9 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-    # Autonomous navigation
-
-    follow_line(
-        drone,
-        path_points
-    )
-
     # Background
 
-    screen.fill(WHITE)
-
+    screen.fill((248, 248, 248))
 
     # Draw walls
 
@@ -55,15 +51,15 @@ while running:
 
         pygame.draw.rect(
             screen,
-            BLACK,
+            (30, 30, 30),
             wall
         )
 
-    # Draw exit
+    # Exit opening
 
     pygame.draw.rect(
         screen,
-        GREEN,
+        (170, 210, 170),
         (
             WIDTH - EXIT_GAP,
             0,
@@ -72,17 +68,59 @@ while running:
         )
     )
 
-    # Draw continuous navigation line
+    # Time
 
-    pygame.draw.lines(
+    elapsed = (
+        pygame.time.get_ticks() - start_time
+    ) / 1000
+
+    # Phase 1 — Scanning
+
+    if elapsed < 5:
+
+        for path in fake_paths:
+
+            pygame.draw.lines(
+                screen,
+                (210, 225, 210),
+                False,
+                path,
+                3
+            )
+
+    # Phase 2 — Final path
+
+    else:
+
+        pygame.draw.lines(
+            screen,
+            (160, 190, 160),
+            False,
+            exit_path,
+            5
+        )
+
+        # Drone follows path
+
+        follow_line(
+            drone,
+            exit_path,
+            walls
+        )
+
+    # Drone shadow
+
+    pygame.draw.circle(
         screen,
-        BLACK,
-        False,
-        path_points,
-        8
+        (180, 180, 180),
+        (
+            int(drone.x + 4),
+            int(drone.y + 4)
+        ),
+        16
     )
 
-    # Draw drone
+    # Drone body
 
     pygame.draw.circle(
         screen,
@@ -94,15 +132,15 @@ while running:
         15
     )
 
-    # Drone direction indicator
+    # Direction indicator
 
     end_x = drone.x + math.cos(
         math.radians(drone.angle)
-    ) * 30
+    ) * 28
 
     end_y = drone.y - math.sin(
         math.radians(drone.angle)
-    ) * 30
+    ) * 28
 
     pygame.draw.line(
         screen,

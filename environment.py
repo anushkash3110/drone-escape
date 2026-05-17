@@ -1,10 +1,10 @@
 import pygame
-
 from settings import *
+
 
 def create_environment():
 
-    # Top wall
+    # Walls
 
     top_wall = pygame.Rect(
         0,
@@ -13,16 +13,12 @@ def create_environment():
         WALL_THICKNESS
     )
 
-    # Left wall
-
     left_wall = pygame.Rect(
         0,
         0,
         WALL_THICKNESS,
         HEIGHT
     )
-
-    # Right wall
 
     right_wall = pygame.Rect(
         WIDTH - WALL_THICKNESS,
@@ -31,8 +27,6 @@ def create_environment():
         HEIGHT
     )
 
-    # Bottom wall
-
     bottom_wall = pygame.Rect(
         0,
         HEIGHT - WALL_THICKNESS,
@@ -40,7 +34,7 @@ def create_environment():
         WALL_THICKNESS
     )
 
-    # Center cabin obstacle
+    # Center obstacle
 
     cabin = pygame.Rect(
         380,
@@ -48,8 +42,6 @@ def create_environment():
         220,
         140
     )
-
-    # Collision objects
 
     walls = [
         top_wall,
@@ -59,26 +51,52 @@ def create_environment():
         cabin
     ]
 
-    # Navigation path
+    # Fake scanning paths
 
-    path_points = [
+    fake_paths = [
 
-        (150, 560),
-        (220, 560),
-        (300, 560),
+        [(150, 560), (200, 530), (260, 500)],
 
-        (360, 520),
-        (360, 450),
+        [(150, 560), (170, 470), (200, 390)],
 
-        (360, 400),
-        (360, 330),
+        [(150, 560), (260, 560), (360, 560)],
 
-        (650, 330),
+        [(150, 560), (240, 520), (340, 460)],
 
-        (760, 260),
-        (850, 180),
+        [(150, 560), (300, 560), (360, 520)],
 
-        (920, 80)
     ]
 
-    return walls, cabin, path_points
+    # Correct exit path
+
+    exit_path = [
+
+    # Start
+
+    (150, 560),
+    (240, 560),
+    (320, 560),
+
+    # Move upward
+
+    (320, 500),
+    (320, 420),
+
+    # Move beside obstacle
+
+    (320, 220),
+
+    # Curve toward exit
+
+    (420, 170),
+    (560, 130),
+
+    (720, 100),
+    (860, 80),
+
+    # Fully outside room
+
+    (1040, -40)
+]
+
+    return walls, cabin, fake_paths, exit_path

@@ -1,44 +1,44 @@
 import math
 
-
 current_target_index = 0
 
-
-def follow_line(drone, path_points):
+def follow_line(drone, exit_path, walls):
 
     global current_target_index
 
-    if current_target_index >= len(path_points):
+    if current_target_index >= len(exit_path):
         return
 
-    target_x, target_y = path_points[current_target_index]
+    target_x, target_y = exit_path[current_target_index]
 
     dx = target_x - drone.x
     dy = target_y - drone.y
 
     distance = math.sqrt(dx**2 + dy**2)
 
-    # Move to next point
+    # Go to next point
 
-    if distance < 25:
+    if distance < 20:
 
         current_target_index += 1
 
-        if current_target_index >= len(path_points):
+        if current_target_index >= len(exit_path):
             return
 
-        target_x, target_y = path_points[current_target_index]
+        target_x, target_y = exit_path[current_target_index]
 
         dx = target_x - drone.x
         dy = target_y - drone.y
 
-    # Calculate angle
+    # Target angle
 
     target_angle = math.degrees(
         math.atan2(-dy, dx)
     )
 
-    angle_difference = target_angle - drone.angle
+    angle_difference = (
+        target_angle - drone.angle
+    )
 
     # Normalize angle
 
@@ -48,10 +48,36 @@ def follow_line(drone, path_points):
     if angle_difference < -180:
         angle_difference += 360
 
-    # Smooth turning
+    # Very smooth turning
 
-    drone.angle += angle_difference * 0.07
+    drone.angle += angle_difference * 0.04
 
-    # Move drone
+    # Smooth slow speed
+
+    drone.speed = 1.5
+
+    # Save old position
+
+    old_x = drone.x
+    old_y = drone.y
+
+    # Move
 
     drone.move()
+
+    drone_rect = drone.get_rect()
+
+    # Collision handling
+
+    for wall in walls:
+
+        if drone_rect.colliderect(wall):
+
+            # Soft recovery
+
+            drone.x = old_x
+            drone.y = old_y
+
+            # Slight angle correction
+
+            drone.angle += 2
